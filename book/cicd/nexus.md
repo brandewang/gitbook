@@ -12,3 +12,4 @@ docker run -d -p 8081:8081 --name nexus --restart always -v /data/nexus:/nexus-d
 ```bash
 mvn deploy:deploy-file -DgroupId=com.fruitday -DartifactId=test01 -Dversion=0.0.1 -Dpackaging=jar -Dfile=test01.jar -Durl=http://10.28.50.6:8081/repository/3rd-party -DrepositoryId=3rd-party
 ```
+
