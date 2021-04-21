@@ -41,7 +41,9 @@
     * [8.monitor](book/kubernetes/monitor.md)
 * Ceph
 * DB
+    * [mysql](book/db/mysql.md)
 * Middleware
+    * [redis](book/middleware/redis.md)
 * Network
     * [openvpn](book/network/openvpn.md)
 * CICD

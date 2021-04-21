@@ -229,8 +229,8 @@ systemctl daemon-reload
 systemctl restart kubelet
 ```
 
-
 2.在k8s-etcd0中为etcd集群各主机生成kubeadm配置文件
+
 ```
 # Update HOST0, HOST1, and HOST2 with the IPs or resolvable names of your hosts
 export HOST0=10.55.3.51
