@@ -5,8 +5,8 @@
 ```bash
 mkdir -p /opt/elk
 cd /opt/elk
-tar zxvf kibana-7.11.1-linux-x86_64.tar.gz
-mv kibana-7.11.1-linux-x86_64 kibana
+tar zxvf kibana-7.11.2-linux-x86_64.tar.gz
+mv kibana-7.11.2-linux-x86_64 kibana
 
 #config/kibana.yml
 server.port: 5601
@@ -28,4 +28,20 @@ Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
+```
+
+## helm
+```bash
+helm repo add elastic https://helm.elastic.co
+mkdir -p /opt/helm && cd /opt/helm
+helm pull elastic/kibana
+
+#vim values.yml
+imageTag: "7.11.2"
+
+service:
+  type: NodePort
+  loadBalancerIP: ""
+  port: 5601
+  nodePort: 30002
 ```

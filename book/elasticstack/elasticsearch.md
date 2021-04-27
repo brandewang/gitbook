@@ -30,8 +30,8 @@ sysctl -p
 ```bash
 mkdir -p /opt/elk
 cd /opt/elk
-tar zxvf elasticsearch-7.9.3-linux-x86_64.tar.gz
-mv elasticsearch-7.9.3 elasticsearch
+tar zxvf elasticsearch-7.11.2-linux-x86_64.tar.gz
+mv elasticsearch-7.11.2 elasticsearch
 useradd es
 chown -R es:es elasticsearch
 
@@ -67,6 +67,15 @@ mkdir /opt/helm && cd /opt/helm
 helm pull elastic/elasticsearch
 
 #vim values.yaml
+imageTag: "7.11.2"
+
+service:
+  labels: {}
+  labelsHeadless: {}
+  #type: ClusterIP
+  type: NodePort
+  nodePort: 30009
+
 volumeClaimTemplate:
   accessModes: [ "ReadWriteOnce" ]
   storageClassName: 'dynamic-cephfs'
