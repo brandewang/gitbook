@@ -58,9 +58,54 @@ KillMode=process
 Restart=on-failure
 [Install]
 WantedBy=multi-user.target
+```
 
+## helm
+```
+helm repo add elastic https://helm.elastic.co
+mkdir /opt/helm && cd /opt/helm
+helm pull elastic/elasticsearch
+
+#vim values.yaml
+volumeClaimTemplate:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: 'dynamic-cephfs'
+  resources:
+    requests:
+      storage: 5Gi
+
+extraInitContainers:
+  - name: do-something
+    image: busybox
+    command: ['chown', '-R', '1000:1000', '/usr/share/elasticsearch/data']
+    #command: ['id']
+    securityContext:
+      runAsUser: 0
+
+#vim statefulset.yaml 将数据卷以同样的形式挂载到initContainer,以给文件夹赋权
+      {{- if .Values.extraInitContainers }}
+      # Currently some extra blocks accept strings
+      # to continue with backwards compatibility this is being kept
+      # whilst also allowing for yaml to be specified too.
+      {{- if eq "string" (printf "%T" .Values.extraInitContainers) }}
+{{ tpl .Values.extraInitContainers . | indent 6 }}
+      {{- else }}
+{{ toYaml .Values.extraInitContainers | indent 6 }}
+      {{- end }}
+      {{- end }}
+        volumeMounts:
+          {{- if .Values.persistence.enabled }}
+          - name: "{{ template "elasticsearch.uname" . }}"
+            mountPath: /usr/share/elasticsearch/data
+          {{- end }}
+      {{- end }}
+```
+
+
+## Command
+```bash
 #查看集群节点: curl -XGET 'http://127.0.0.1:9200/_cat/nodes?pretty'
-#查询集群状态: curl -i XGET 'http://127.0.0.1:9200/_cluster/health?pretty'
+#查询集群状态: curl -XGET 'http://127.0.0.1:9200/_cluster/health?pretty'
 ```
 
 ## UI

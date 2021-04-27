@@ -1,13 +1,12 @@
 # Dashboard
 
+## install
 ```
 wget https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.4/aio/deploy/recommended.yaml
-```
 
 默认Dashboard只能集群内部访问，修改Service为NodePort类型，暴露到外部：
 
 $ vi recommended.yaml
-```
 kind: Service
 apiVersion: v1
 metadata:
@@ -31,7 +30,21 @@ kubernetes-dashboard-7f99b75bf4-89cds        1/1     Running   0          13m
 ```
 访问地址：https://NodeIP:30001
 
-#dashboard (master01 上执行), 自签证书。
+## helm
+```bash
+helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+mkdir /opt/helm && cd /opt/helm
+helm pull kubernetes-dashboard/kubernetes-dashboard
+#vim values.yaml
+service:
+  type: NodePort
+  nodePort: 30001
+  externalPort: 443
+
+helm install elasticsearch ./elasticsearch -n elk
+```
+
+## dashboard (master01 上执行), 自签证书。
 ```
 cd /opt/cert/
 openssl genrsa -out dashboard.key 2048
@@ -40,7 +53,7 @@ openssl x509 -req -in dashboard.csr -signkey dashboard.key -out dashboard.crt
 kubectl create secret generic kubernetes-dashboard-certs --from-file=dashboard.key --from-file=dashboard.crt -n kubernetes-dashboard
 ```
 
-创建service account并绑定默认cluster-admin管理员集群角色：
+## 创建service account并绑定默认cluster-admin管理员集群角色：
 
 ```
 # 创建用户
@@ -52,7 +65,7 @@ $ kubectl describe secrets -n kube-system $(kubectl -n kube-system get secret | 
 ```
 使用输出的token登录Dashboard。
 
-创建登陆dashboard的配置文件
+## 创建登陆dashboard的配置文件
 ```
 kubectl create sa dashboard-admin -n kube-system
 kubectl create clusterrolebinding dashboard-admin --clusterrole=cluster-admin --serviceaccount=kube-system:dashboard-admin

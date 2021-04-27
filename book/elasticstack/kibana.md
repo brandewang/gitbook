@@ -13,6 +13,8 @@ server.port: 5601
 server.host: "0.0.0.0"
 elasticsearch.hosts: ["http://10.55.3.71:9200"]
 i18n.locale: "zh-CN"
+#单位ms,设置过小可能会导致连接elasticsearch超时
+elasticsearch.requestTimeout: 90000
 
 #kibana.service
 [Unit]
