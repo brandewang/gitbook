@@ -148,7 +148,8 @@ source <(kubectl completion bash)
 #### 2.1.1 部署Kubernetes Master
 https://kubernetes.io/zh/docs/reference/setup-tools/kubeadm/kubeadm-init/#config-file
 https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#initializing-your-control-plane-node
-#在master(10.55.3.54)主机上执行
+
+在master(10.55.3.54)主机上执行
 ```
 $ kubeadm init \
   --apiserver-advertise-address=10.55.3.54 \
@@ -214,9 +215,8 @@ https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/
 https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/setup-ha-etcd-with-kubeadm/
 https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/
 #### 2.3.1 External etcd nodes
-
 1.etcd以kubelet静态pod的方式启动，覆盖原始优先级，写入service配置文件, 使用阿里云pause镜像，
-```
+```bash
 cat << EOF > /etc/systemd/system/kubelet.service.d/20-etcd-service-manager.conf
 [Service]
 ExecStart=
@@ -297,13 +297,13 @@ kubeadm init phase certs etcd-server --config=/tmp/${HOST0}/kubeadmcfg.yaml
 kubeadm init phase certs etcd-peer --config=/tmp/${HOST0}/kubeadmcfg.yaml
 kubeadm init phase certs etcd-healthcheck-client --config=/tmp/${HOST0}/kubeadmcfg.yaml
 kubeadm init phase certs apiserver-etcd-client --config=/tmp/${HOST0}/kubeadmcfg.yaml
-# No need to move the certs because they are for HOST0
+#No need to move the certs because they are for HOST0
 
-# clean up certs that should not be copied off this host
+#clean up certs that should not be copied off this host
 find /tmp/${HOST2} -name ca.key -type f -delete
 find /tmp/${HOST1} -name ca.key -type f -delete
 ```
-5. 复制证书及kubeadm配置文件到各节点
+5.复制证书及kubeadm配置文件到各节点
 ```
 USER=root
 HOST=${HOST1}
