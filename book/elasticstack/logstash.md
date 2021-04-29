@@ -65,6 +65,18 @@ input {
 		port => 5044
 	}
 }
+
+#redis
+input {
+  redis {
+    host => "172.16.1.1"
+    port => 6379
+    password => "123456"
+    key => "filebeat"
+    data_type => "list"
+    db =>1
+  }
+}
 ```
 
 ## filter

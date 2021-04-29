@@ -2,17 +2,47 @@
 
 ## 二进制安装
 ``` bash
+#安装
 cd /opt
-wget https://github.com/antirez/redis/archive/3.2.12.tar.gz
+https://download.redis.io/releases/redis-4.0.9.tar.gz
 tar zxvf 3.2.12.tar.gz
-cd redis-3.2.12
-make && make install
-mkdir /opt/redis6379
-cp redis.conf /opt/redis6379/redis6379.conf
-#redis6379.conf
+ln -s redis-4.0.9 redis
+cd redis
+make && make PREFIX=/opt/redis install
+
+#环境变量
+cat > /etc/profile.d/redis.sh <<EOF
+export PATH=/opt/redis/bin:$PATH
+EOF
+
+#配置文件
+#redis.conf
+bind 0.0.0.0
+requirepass 123456
 daemonize yes
-logfile /opt/redis6379/redis6379.log
-dir /opt/redis6379
+logfile /opt/redis/redis.log
+dir /opt/redis
+
+#systemd
+cat > /lib/systemd/system/redis.service <<EOF
+[Unit]
+Description=redis-server
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/opt/redis/bin/redis-server /opt/redis/redis.conf
+ExecStop=/opt/redis/bin/redis-cli shutdown
+ExecReload=/bin/kill -s HUP $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
+## redis-sentinel
+```bash
 #启动master
 redis-server /opt/redis6379/redis6379.conf
 #启动slave

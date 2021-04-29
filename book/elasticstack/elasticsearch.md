@@ -42,9 +42,19 @@ node.name: node-1           # 集群节点名称
 #path.logs: /path/to/logs   # 日志目录
 network.host: 0.0.0.0       # 监听地址
 http.port: 9200             # 监听端口
-#transport.tcp.port: 9300   # 内部节点之间通信端口
+transport.tcp.port: 9300   # 内部节点之间通信端口
 discovery.seed_hosts: ["10.55.3.71", "10.55.3.72", "10.55.3.73"] # 集群节点列表
 cluster.initial_master_nodes: ['node-1']  # 首次启动指定的master节点
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+http.cors.allow-headers: Authorization
+xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate 
+xpack.security.transport.ssl.keystore.path: /etc/elasticsearch/elastic-certificates.p12 
+xpack.security.transport.ssl.truststore.path: /etc/elasticsearch/elastic-certificates.p12 
+
+
 
 #elasticsearch.service
 [Unit]

@@ -90,6 +90,16 @@ filebeat.inputs:
 #推送到Logstash
 output.logstash:
   hosts: ["10.55.3.70:5044"]
+
+#推送到redis
+output.redis:
+  enabled: true
+  hosts: ["172.16.112.143:6379"]
+  key: filebeat
+  db: 1
+  datatype: list
+
+
 #推送到ES
 setup.ilm.enabled: false
 setup.template.name: "microservice-product"
