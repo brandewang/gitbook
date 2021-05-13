@@ -2,6 +2,19 @@
 
 - url: elastic.co
 
+c : code node
+d : data node
+f : frozen node
+h : hot node
+i : ingest node
+l : machine learning node
+m : master eligible node
+r : remote cluster client node
+s : content node
+t : transform node
+v : voting-only node
+w : warm node
+-  : coordinating node only
   
 
 ## 启动先决条件
@@ -32,29 +45,42 @@ mkdir -p /opt/elk
 cd /opt/elk
 tar zxvf elasticsearch-7.11.2-linux-x86_64.tar.gz
 mv elasticsearch-7.11.2 elasticsearch
-useradd es
+
+./bin/elasticsearch-certutil ca
+./bin/elasticsearch-certutil cert -ca elastic-stack-ca.p12
+mv elastic-stack-ca.p12 config/
+mv elastic-certificates.p12 config/
+
+useradd -r es
 chown -R es:es elasticsearch
 
 #elasticsearch.yml
-cluster.name: elk-cluster    # 集群名称
-node.name: node-1           # 集群节点名称
-#path.data: /path/to/data   # 数据目录
-#path.logs: /path/to/logs   # 日志目录
-network.host: 0.0.0.0       # 监听地址
-http.port: 9200             # 监听端口
-transport.tcp.port: 9300   # 内部节点之间通信端口
-discovery.seed_hosts: ["10.55.3.71", "10.55.3.72", "10.55.3.73"] # 集群节点列表
-cluster.initial_master_nodes: ['node-1']  # 首次启动指定的master节点
+#cluster
+cluster.name: shidc01-es-cluster01
+node.name: shidc01-es-master01
+path.data: /opt/elk/elasticsearch/data
+path.logs: /opt/elk/elasticsearch/logs
+network.host: 10.55.3.71
+http.port: 9200
+transport.tcp.port: 9300
+discovery.seed_hosts: ["10.55.3.71", "10.55.3.72", "10.55.3.73"] 
+discovery.zen.minimum_master_nodes: 2
+cluster.initial_master_nodes: ['shidc01-es-master01']
+#跨站访问
 http.cors.enabled: true
 http.cors.allow-origin: "*"
 http.cors.allow-headers: Authorization
+#X-Pack
 xpack.security.enabled: true
 xpack.security.transport.ssl.enabled: true
 xpack.security.transport.ssl.verification_mode: certificate 
-xpack.security.transport.ssl.keystore.path: /etc/elasticsearch/elastic-certificates.p12 
-xpack.security.transport.ssl.truststore.path: /etc/elasticsearch/elastic-certificates.p12 
+xpack.security.transport.ssl.keystore.path: /opt/elk/elasticsearch/config/elastic-certificates.p12 
+xpack.security.transport.ssl.truststore.path: /opt/elk/elasticsearch/config/elastic-certificates.p12 
 
-
+#path
+cat > /etc/profile.d/elk.sh <<EOF
+export PATH=/opt/elk/elasticsearch/bin:${PATH}
+EOF
 
 #elasticsearch.service
 [Unit]
@@ -68,6 +94,9 @@ KillMode=process
 Restart=on-failure
 [Install]
 WantedBy=multi-user.target
+
+#初始x-pack用户
+./bin/elasticsearch-setup-passwords interactive
 ```
 
 ## helm
@@ -155,3 +184,14 @@ docker run -idt --name cerebro -p 9000:9000 lmenezes/cerebro
 docker run -p 9800:9800 -d --name elastichd  containerize/elastichd
 ```
 
+## API
+```
+#修改ilm轮询间隔
+PUT _cluster/settings
+{
+  "persistent" : { 
+    "indices.lifecycle.poll_interval": "10s"
+  },
+  "transient" : { }
+}
+```

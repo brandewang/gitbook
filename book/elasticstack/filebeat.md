@@ -109,3 +109,73 @@ output.elasticsearch:
   index: "microservice-product-%{+yyy.MM.dd}"
 ```
 
+## k8s sidecar
+```bash
+cat > app03-filebeat-config.yaml <<EOF
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: app03-filebeat-config
+  namespace: default
+data:
+  filebeat.yml: |
+    filebeat.inputs:
+    - type: log
+      enabled: true
+      paths:
+        - /opt/logs/*.log
+      fields_under_root: true
+      fields:
+        env: prd
+        project: ms
+        service: app03
+      tags: ["java", "other", "app_log"]
+    output.redis:
+      enabled: true
+      hosts: ["172.16.112.143:6379"]
+      password: 123456
+      key: filebeat
+      db: 1
+      datatype: list
+EOF
+
+cat > app03.yaml <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app03
+spec:
+  containers:
+  - name: app03
+    image: busybox
+    args:
+    - /bin/sh
+    - -c
+    - >
+      i=0;
+      while true;
+      do
+        echo "$i: $(date)" >> /opt/logs/1.log;
+        echo "$(date) INFO $i" >> /opt/logs/2.log;
+        i=$((i+1));
+        sleep 1;
+      done
+    volumeMounts:
+    - name: log
+      mountPath: /opt/logs
+  - name: filebeat
+    image: elastic/filebeat:7.11.2
+    volumeMounts:
+    - name: log
+      mountPath: /opt/logs
+    - name: filebeat-config
+      mountPath: /usr/share/filebeat/filebeat.yml
+      subPath: filebeat.yml
+  volumes:
+  - name: log
+    emptyDir: {}
+  - name: filebeat-config
+    configMap:
+      name: app03-filebeat-config
+EOF
+```

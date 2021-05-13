@@ -190,9 +190,11 @@ Output
 #elasticsearch
 output {
   elastichsearch {
-	  hosts => ["192.168.3.71:9200", "192.168.3.72:9200", "192.168.3.73:9200"]
-		index => "microservice-product-%{+YYYY.MM.dd}"
-	}
+    hosts => ["192.168.3.71:9200", "192.168.3.72:9200", "192.168.3.73:9200"]
+    user => elastic
+    password => elastic
+    index => "microservice-product-%{+YYYY.MM.dd}"
+  }
 }
 ```
 

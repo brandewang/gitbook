@@ -2,6 +2,7 @@
 
 - 官网: prometheus.io
 - git: https://github.com/prometheus/prometheus
+- alert: https://awesome-prometheus-alerts.grep.to/rules
 
 ## prometheus服务配置
 ```bash

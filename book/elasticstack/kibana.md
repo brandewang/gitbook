@@ -15,6 +15,9 @@ elasticsearch.hosts: ["http://10.55.3.71:9200"]
 i18n.locale: "zh-CN"
 #单位ms,设置过小可能会导致连接elasticsearch超时
 elasticsearch.requestTimeout: 90000
+elasticsearch.username: "elastic"
+elasticsearch.password: "elastic"
+
 
 #kibana.service
 [Unit]
@@ -34,10 +37,11 @@ WantedBy=multi-user.target
 ```bash
 helm repo add elastic https://helm.elastic.co
 mkdir -p /opt/helm && cd /opt/helm
-helm pull elastic/kibana
+
+helm search repo elastic/kibana -l
+helm pull elastic/kibana --version=7.11.2
 
 #vim values.yml
-imageTag: "7.11.2"
 
 service:
   type: NodePort
