@@ -3,12 +3,12 @@
 url: https://github.com/kubernetes-sigs/metrics-server
 ```
 #下载manifests
-wget https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.7/components.yaml
+wget https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.4/components.yaml
 
 #修改为国内镜像资源，添加对应args
       containers:
       - name: metrics-server
-        image: lizhenliang/metrics-server:v0.3.7
+        image: bitnami/metrics-server:v0.4.4
         imagePullPolicy: IfNotPresent
         args:
           - --cert-dir=/tmp

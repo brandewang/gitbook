@@ -31,6 +31,11 @@ set -e
 #\1代表第一个括号匹配
 echo 'abcabcabc' | sed 's/\(ab\)c/\1/'
 ```
+## xargs
+```bash
+#同时使用一行的多个参数
+echo arg1 arg2|xargs -l bash -c 'echo $0 \|$1'
+```
 
 ## nfs
 
