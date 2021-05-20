@@ -123,6 +123,14 @@ mysql> start slave;
 
 ## Command
 
+### Ubuntu&Debian root登录插件问题
+```
+mysql> USE mysql;
+mysql> UPDATE user SET plugin='mysql_native_password' WHERE User='root';
+mysql> FLUSH PRIVILEGES;
+mysql> exit;
+```
+
 ### MySQL修改root密码
 
 ``` bash

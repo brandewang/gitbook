@@ -22,11 +22,6 @@ Restart=on-failure
 WantedBy=multi-user.target
 
 #logstash.conf
-pipeline: # 管道配置
-  batch:
-    size: 125
-    delay: 5
-path.config: /opt/elk/logstash/conf.d #logstash -e模式下不允许使用该参数
 #定期检查配置是否修改，并重新加载管道。也可以使用SIGHUP信号手动触发
 #config.reload.automatic: false
 #config.reload.interval: 3s
@@ -35,6 +30,25 @@ http.host: 0.0.0.0
 http.port: 9600-9700
 log.level: info
 path.logs: /opt/elk/logstash/logs
+
+#pipelines.yml 为默认path.config路径
+#配置多管道解耦入口
+- pipeline.id: main
+  path.config: "/opt/elk/logstash/config/pipelines/main.conf"
+
+- pipeline.id: test
+  path.config: "/opt/elk/logstash/config/pipelines/test.conf"
+
+- pipeline.id: ciicsh-zlt2-mqmsg
+  path.config: "/opt/elk/logstash/config/pipelines/ciicsh-zlt2-mqmsg.conf"
+
+- pipeline.id: ciicsh-zlt2-bizlog
+  path.config: "/opt/elk/logstash/config/pipelines/ciicsh-zlt2-bizlog.conf"
+
+- pipeline.id: ciicsh-zlt2-auditlog
+  path.config: "/opt/elk/logstash/config/pipelines/ciicsh-zlt2-auditlog.conf"
+
+
 
 #debug
 /opt/elk/logstash/bin/logstash -e 'input{stdin{}}output{stdout{codec=>rubydebug}}'

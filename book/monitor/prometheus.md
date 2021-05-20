@@ -116,7 +116,7 @@ inhibit_rules:
 
 ## Linux监控 node_exporter
 - git:https://github.com/prometheus/node_exporter
-- grafana dashboard import id: 9276
+- grafana dashboard import id: 9276/8919
 
 二进制部署
 ```bash

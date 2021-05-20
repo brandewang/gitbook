@@ -253,3 +253,47 @@ http {
 #    }
 #}
 ```
+
+## Nginx https Conig
+```bash
+upstream example.domain.com
+        {
+           server 1.1.1.1 max_fails=2 fail_timeout=30s;
+}
+server {
+    listen       80;
+    server_name example.domain.com;
+        return 301 https://$host$request_uri;
+    }
+
+server
+        {
+        listen 443 ssl;
+        server_name example.domain.com;
+        #ssl on;
+        ssl_protocols   TLSv1.2;
+        access_log /var/log/nginx/access_log/itms.com.log     access_json_log;
+        error_log /var/log/nginx/error_log/itms.com.log       error;
+        ssl_certificate /etc/nginx/conf.d/ssl-xmwb/ciicsh.com.signed.crt;
+        ssl_certificate_key /etc/nginx/conf.d/ssl-xmwb/ciicsh.com.key;
+        location /
+                {
+                ## Block some robots ##
+                if ($http_user_agent ~* msnbot|scrapbot) {          return 403;     }
+
+                ## Only allow these request methods ##
+                if ($request_method !~ ^(GET|HEAD|POST)$ ) {         return 444;     }
+                ## Do not accept DELETE, SEARCH and other methods ##
+
+                ## Block download agents ##
+                if ($http_user_agent ~* LWP::Simple|BBBike|wget) {        return 403;     }
+                ##
+                proxy_pass http://itms.ciicsh.com;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection keep-alive;
+                proxy_set_header Host $host;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+             }
+        }
+```
