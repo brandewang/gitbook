@@ -20,7 +20,11 @@
     * [AWS](book/public-cloud/aws.md)
 * Monitor
     * [zabbix](book/monitor/zabbix.md)
-    * [prometheus](book/monitor/prometheus.md)
+    * Prometheus
+        * [Prometheus](book/monitor/prometheus/prometheus.md)
+        * [AlertManager](book/monitor/prometheus/alertmanager.md)
+        * [Expoter](book/monitor/prometheus/exporter.md)
+        * [ServiceDiscovery](book/monitor/prometheus/service_discovery.md)
 * ElasticStack
     * [ElasticSearch](book/elasticstack/elasticsearch.md)
     * [Kibana](book/elasticstack/kibana.md)
