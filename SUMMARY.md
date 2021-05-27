@@ -33,6 +33,7 @@
     * [日志收集](book/elasticstack/日志收集.md)
     * [扩容](book/elasticstack/扩容.md)
     * [ElasticSearch-Swarm](book/elasticstack/ElasticSearch-Swarm.md)
+    * [Auditbeat](book/elasticstack/auditbeat.md)
 * Kubernetes
     * [0.command](book/kubernetes/command.md)
     * [1.K8S](book/kubernetes/k8s.md)
