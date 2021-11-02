@@ -13,6 +13,7 @@
         * [lvs](book/os/linux/lvs.md)
         * [haproxy](book/os/linux/haproxy.md)
         * [nginx](book/os/linux/nginx.md)
+        * 
         * [keepalived](book/os/linux/keepalived.md)
     * Windows
         * [command](book/os/windows/command.md)
@@ -45,8 +46,10 @@
     * [7.ingress](book/kubernetes/ingress.md)
     * [8.monitor](book/kubernetes/monitor.md)
 * Ceph
+    * [command](book/ceph/command.md)
 * DB
     * [mysql](book/db/mysql.md)
+    * [mongodb](book/db/mongodb.md)
 * Middleware
     * [redis](book/middleware/redis.md)
 * Network
