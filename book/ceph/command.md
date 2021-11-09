@@ -36,6 +36,22 @@ do
   radosgw-admin bucket rm --bucket=$i  --purge-objects
   echo -n "end:";date
 done
+
+#桶的最新文件
+#!/bin/bash
+user_list=`radosgw-admin user list|awk -NF'"' '{print $2}'|grep -v '^$'`
+
+for user in `echo $user_list`
+do
+  access_key=`radosgw-admin user info --uid=$user|jq .keys[0].access_key|tr -d \"`
+  secret_key=`radosgw-admin user info --uid=$user|jq .keys[0].secret_key|tr -d \"`
+  for bucket in `s3cmd ls --access_key=$access_key --secret_key=$secret_key|awk '{print $3}'`
+  do
+    echo -n "$bucket "
+    object_info=`s3cmd ls $bucket --access_key=$access_key --secret_key=$secret_key|sort|tail -n 1|awk '{print $1,$2,$4}'`
+    echo $object_info
+  done
+done
 ```
 
 ## S3cmd
